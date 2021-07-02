@@ -39,4 +39,20 @@ export class TasksService {
   getTaskById(id: string): Task {
     return this.tasks.find((task) => task.id === id);
   }
+
+  deleteTaskById(id: string): void {
+    this.tasks = this.tasks.filter((task) => task.id !== id);
+  }
+
+  updateTaskStatus(id: string, status: TaskStatus): Task {
+    // this.tasks = this.tasks.map((task) => {
+    //   if (task.id === id) {
+    //     task.status = status;
+    //   }
+    //   return task;
+    // });
+    const task: Task = this.getTaskById(id);
+    task.status = status;
+    return task;
+  }
 }
