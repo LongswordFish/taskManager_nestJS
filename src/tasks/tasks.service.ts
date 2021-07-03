@@ -6,79 +6,83 @@ import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 @Injectable()
 export class TasksService {
-  private tasks: Task[] = [];
 
-  getAllTasks(): Task[] {
-    return this.tasks;
-  }
 
-  // method without dto
-  //   createTask(title: string, description: string): Task {
-  //     const task: Task = {
-  //       id: uuid(),
-  //       title,
-  //       description,
-  //       status: TaskStatus.OPEN,
-  //     };
+  
+  //old method using the local machine temprary memory
+  // private tasks: Task[] = [];
 
-  // method with dto
-  createTask(createTaskDto: CreateTaskTdo): Task {
-    const { title, description } = createTaskDto;
+  // getAllTasks(): Task[] {
+  //   return this.tasks;
+  // }
 
-    const task: Task = {
-      id: uuid(),
-      title,
-      description,
-      status: TaskStatus.OPEN,
-    };
+  // // method without dto
+  // //   createTask(title: string, description: string): Task {
+  // //     const task: Task = {
+  // //       id: uuid(),
+  // //       title,
+  // //       description,
+  // //       status: TaskStatus.OPEN,
+  // //     };
 
-    this.tasks.push(task);
+  // // method with dto
+  // createTask(createTaskDto: CreateTaskTdo): Task {
+  //   const { title, description } = createTaskDto;
 
-    return task;
-  }
+  //   const task: Task = {
+  //     id: uuid(),
+  //     title,
+  //     description,
+  //     status: TaskStatus.OPEN,
+  //   };
 
-  getTaskById(id: string): Task {
-    //old method
-    //return this.tasks.find((task) => task.id === id);
+  //   this.tasks.push(task);
 
-    //throw exceptions
-    const found = this.tasks.find((task) => task.id === id);
-    if (!found) throw new NotFoundException(`Task with ID: ${id} not found!`);
-    else return found;
-  }
+  //   return task;
+  // }
 
-  deleteTaskById(id: string): void {
-    //old method
-    this.tasks = this.tasks.filter((task) => task.id !== id);
-  }
+  // getTaskById(id: string): Task {
+  //   //old method
+  //   //return this.tasks.find((task) => task.id === id);
 
-  updateTaskStatus(id: string, status: TaskStatus): Task {
-    // this.tasks = this.tasks.map((task) => {
-    //   if (task.id === id) {
-    //     task.status = status;
-    //   }
-    //   return task;
-    // });
-    const task: Task = this.getTaskById(id);
-    task.status = status;
-    return task;
-  }
+  //   //throw exceptions
+  //   const found = this.tasks.find((task) => task.id === id);
+  //   if (!found) throw new NotFoundException(`Task with ID: ${id} not found!`);
+  //   else return found;
+  // }
 
-  getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
-    const { status, search } = filterDto;
+  // deleteTaskById(id: string): void {
+  //   //old method
+  //   this.tasks = this.tasks.filter((task) => task.id !== id);
+  // }
 
-    let tasks = this.getAllTasks();
-    if (status) {
-      tasks = tasks.filter((task) => task.status === status);
-    }
+  // updateTaskStatus(id: string, status: TaskStatus): Task {
+  //   // this.tasks = this.tasks.map((task) => {
+  //   //   if (task.id === id) {
+  //   //     task.status = status;
+  //   //   }
+  //   //   return task;
+  //   // });
+  //   const task: Task = this.getTaskById(id);
+  //   task.status = status;
+  //   return task;
+  // }
 
-    if (search) {
-      tasks = tasks.filter((task) => {
-        if (task.title.includes(search) || task.description.includes(search))
-          return true;
-        else return false;
-      });
-    }
-    return tasks;
-  }
+  // getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
+  //   const { status, search } = filterDto;
+
+  //   let tasks = this.getAllTasks();
+  //   if (status) {
+  //     tasks = tasks.filter((task) => task.status === status);
+  //   }
+
+  //   if (search) {
+  //     tasks = tasks.filter((task) => {
+  //       if (task.title.includes(search) || task.description.includes(search))
+  //         return true;
+  //       else return false;
+  //     });
+  //   }
+  //   return tasks;
+  // }
 }
