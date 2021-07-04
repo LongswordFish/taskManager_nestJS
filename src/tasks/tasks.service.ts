@@ -1,14 +1,50 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Task, TaskStatus } from './task.model';
-import { v4 as uuid } from 'uuid';
+import { Task} from './task.entity';
+import { TaskStatus } from './task-status.enum';
+//import { v4 as uuid } from 'uuid';
 import { CreateTaskTdo } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { TasksRepository } from './tasks.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class TasksService {
 
+  constructor(
+    @InjectRepository(TasksRepository)
+    private tasksRepository:TasksRepository,
+  ){}
 
-  
+  async getTaskById(id:string, user:User):Promise<Task>{
+    const found = await this.tasksRepository.findOne(id);
+    //const found = await this.tasksRepository.findOne({where:{id,user}}});
+    if(!found || found.user.username!==user.username){
+      throw new NotFoundException(`Task with Id ${id} is not found!`);
+    }
+    return found;
+  }
+
+  createTask(createTaskDto: CreateTaskTdo,user:User): Promise<Task> {
+    return this.tasksRepository.createTask(createTaskDto,user);
+  }
+
+  deleteTask(id:string, user:User):Promise<void>{
+    return this.tasksRepository.deleteTask(id,user);
+  }
+
+  async updateTaskStatus(id: string, status: TaskStatus,user:User): Promise<Task> {
+
+    let task= await this.getTaskById(id,user);
+    task.status = status;
+    task = await this.tasksRepository.save(task);
+    return task;
+  }
+
+  getTasks(filterDto:GetTasksFilterDto,user:User): Promise<Task[]>{
+    return this.tasksRepository.getTasks(filterDto,user);
+  }
+
   //old method using the local machine temprary memory
   // private tasks: Task[] = [];
 
